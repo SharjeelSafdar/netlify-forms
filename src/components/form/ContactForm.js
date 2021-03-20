@@ -48,7 +48,7 @@ const ContactForm = () => {
         data-netlify="true"
         data-netlify-honeypot="bot-field"
       >
-        <Field type="hidden" name="contact-form" />
+        <Field type="hidden" name="form-name" />
         <Field type="hidden" name="bot-field" />
 
         <label htmlFor="fullName">Full Name: </label>
