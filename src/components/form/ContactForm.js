@@ -78,7 +78,7 @@ const ContactForm = () => {
 
         <Recaptcha
           // sitekey={process.env.SITE_RECAPTCHA_KEY}
-          sitekey="6LcX_IYaAAAAAHTJ1ATsk6ERThIcy5FlBN_XLLow"
+          sitekey="6LfsHYcaAAAAAIz2p8FI8nTVctJnqvNoKLMbLAzI"
           render="explicit"
           theme="dark"
           verifyCallback={response => {
