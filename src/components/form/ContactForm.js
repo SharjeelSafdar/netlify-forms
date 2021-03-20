@@ -1,5 +1,6 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Formik, Field, Form, ErrorMessage } from "formik"
+import Recaptcha from "react-recaptcha"
 
 const encode = data => {
   return Object.keys(data)
@@ -8,6 +9,16 @@ const encode = data => {
 }
 
 const ContactForm = () => {
+  const [token, setToken] = useState(null)
+
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = "https://www.google.com/recaptcha/api.js"
+    script.async = true
+    script.defer = true
+    document.body.appendChild(script)
+  }, [])
+
   return (
     <Formik
       initialValues={{ fullName: "", email: "" }}
@@ -29,24 +40,28 @@ const ContactForm = () => {
       }}
       onSubmit={data => {
         console.log(data)
-        fetch("/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: encode({
-            "form-name": "contact-form",
-            ...data,
-          }),
-        })
-          .then(_ => alert("Form Submitted"))
-          .catch(err => alert(err))
+        if (token !== null) {
+          fetch("/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: encode({
+              "form-name": "contact-form",
+              "g-recaptcha-response": token,
+              ...data,
+            }),
+          })
+            .then(_ => alert("Form Submitted"))
+            .catch(err => alert(err))
+        }
       }}
     >
       <Form
         name="contact-form"
         data-netlify="true"
         data-netlify-honeypot="bot-field"
+        data-netlify-recaptcha="true"
       >
         <Field type="hidden" name="form-name" />
         <Field type="hidden" name="bot-field" />
@@ -61,6 +76,17 @@ const ContactForm = () => {
         <ErrorMessage name="email" type="text" />
         <br />
 
+        <Recaptcha
+          sitekey={process.env.SITE_RECAPTCHA_SECRET}
+          render="explicit"
+          theme="dark"
+          verifyCallback={response => {
+            setToken(response)
+          }}
+          onloadCallback={() => {
+            console.log("Done loading...")
+          }}
+        />
         <button type="submit">Submit</button>
       </Form>
     </Formik>
