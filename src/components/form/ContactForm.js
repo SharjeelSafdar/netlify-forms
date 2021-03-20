@@ -67,17 +67,17 @@ const ContactForm = () => {
         <Field type="hidden" name="bot-field" />
 
         <label htmlFor="fullName">Full Name: </label>
-        <Field name="fullName" id="fullName" />
+        <Field name="fullName" type="text" />
         <ErrorMessage name="fullName" />
         <br />
 
         <label htmlFor="email">Email: </label>
         <Field name="email" type="text" />
-        <ErrorMessage name="email" type="text" />
+        <ErrorMessage name="email" />
         <br />
 
         <Recaptcha
-          sitekey={process.env.SITE_RECAPTCHA_SECRET}
+          sitekey={process.env.SITE_RECAPTCHA_KEY}
           render="explicit"
           theme="dark"
           verifyCallback={response => {
@@ -87,6 +87,8 @@ const ContactForm = () => {
             console.log("Done loading...")
           }}
         />
+        <br />
+
         <button type="submit">Submit</button>
       </Form>
     </Formik>
